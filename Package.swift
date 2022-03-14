@@ -12,6 +12,7 @@ let package = Package(
 		.library(name: "Lexicon", targets: ["Lexicon"]),
 		.library(name: "SwiftLexicon", targets: ["SwiftLexicon"]),
 		.library(name: "SwiftStandAlone", targets: ["SwiftStandAlone"]),
+		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
 		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
 	],
 	dependencies: [
@@ -42,23 +43,24 @@ let package = Package(
 		
 		// MARK: LexiconGenerators
 		
-		.target(
-			name: "LexiconGenerators",
-			dependencies: [
-				"Lexicon",
-				"SwiftLexicon",
-				"SwiftStandAlone",
-			]
-		),
+			.target(
+				name: "LexiconGenerators",
+				dependencies: [
+					"Lexicon",
+					"SwiftLexicon",
+					"SwiftStandAlone",
+					"KotlinStandAlone"
+				]
+			),
 		
 		// MARK: SwiftLexicon
 		
-		.target(
-			name: "SwiftLexicon",
-			dependencies: [
-				"Lexicon",
-			]
-		),
+			.target(
+				name: "SwiftLexicon",
+				dependencies: [
+					"Lexicon",
+				]
+			),
 		.testTarget(
 			name: "SwiftLexiconTests",
 			dependencies: [
@@ -70,19 +72,38 @@ let package = Package(
 			]
 		),
 		
-		// MARK: 
+		// MARK: SwiftStandAlone
 		
-		.target(
-			name: "SwiftStandAlone",
-			dependencies: [
-				"Lexicon",
-			]
-		),
+			.target(
+				name: "SwiftStandAlone",
+				dependencies: [
+					"Lexicon",
+				]
+			),
 		.testTarget(
 			name: "SwiftStandAloneTests",
 			dependencies: [
 				"Hope",
 				"SwiftStandAlone"
+			],
+			resources: [
+				.copy("Resources"),
+			]
+		),
+		
+		// MARK: KotlinStandAlones
+		
+			.target(
+				name: "KotlinStandAlone",
+				dependencies: [
+					"Lexicon",
+				]
+			),
+		.testTarget(
+			name: "KotlinStandAloneTests",
+			dependencies: [
+				"Hope",
+				"KotlinStandAlone"
 			],
 			resources: [
 				.copy("Resources"),
