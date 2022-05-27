@@ -92,8 +92,6 @@ private extension Lexicon.Graph.Node.Class.JSON {
             return lines
         }
         
-        // implements
-        
         for t in type ?? [] {
             let subClass = classes.filter{$0.id == t}.first
             for child in subClass?.children ?? [] {
@@ -109,8 +107,6 @@ private extension Lexicon.Graph.Node.Class.JSON {
             
         }
         
-        
-        // extends
         for child in children ?? [] {
             let id = "\(id).\(child)"
             lines += "  \(child) = new \(L)_\(id.idToClassSuffix)(`${this.identifier}.\(child)`);"
@@ -130,7 +126,6 @@ private extension Lexicon.Graph.Node.Class.JSON {
         lines += "}"
         return lines
     }
-    
 }
 
 private extension String {
