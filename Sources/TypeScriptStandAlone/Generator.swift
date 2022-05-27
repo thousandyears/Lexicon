@@ -95,7 +95,6 @@ private extension Lexicon.Graph.Node.Class.JSON {
         // implements
         
         for t in type ?? [] {
-            print(t)
             let subClass = classes.filter{$0.id == t}.first
             for child in subClass?.children ?? [] {
                 let id = "L.\(t).\(child)"
