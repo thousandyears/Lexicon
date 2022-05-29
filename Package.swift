@@ -14,7 +14,7 @@ let package = Package(
 		.library(name: "SwiftStandAlone", targets: ["SwiftStandAlone"]),
 		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
 		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
-		.executable(name: "lexicon-generator", targets: ["lexicon-generator"]),
+		.executable(name: "lexicon-generate", targets: ["lexicon-generate"]),
 		.plugin(name: "LexiconCodeGeneratorPlugin", targets: ["LexiconCodeGeneratorPlugin"])
 	],
 	dependencies: [
@@ -116,7 +116,7 @@ let package = Package(
 		// MARK: Swift Package Manager Plugin
 
 		.executableTarget(
-			name: "lexicon-generator",
+			name: "lexicon-generate",
 			dependencies: [
 				.target(name: "LexiconGenerators"),
 				.product(name: "ArgumentParser", package: "swift-argument-parser")
@@ -133,7 +133,7 @@ let package = Package(
 					.writeToPackageDirectory(reason: "This plugin generates code from a lexicon document")
 				]
 			),
-			dependencies: ["lexicon-generator"]
+			dependencies: ["lexicon-generate"]
 		)
 	]
 )
