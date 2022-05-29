@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version: 5.6
 
 import PackageDescription
 
@@ -14,10 +14,13 @@ let package = Package(
 		.library(name: "SwiftStandAlone", targets: ["SwiftStandAlone"]),
 		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
 		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
+		.executable(name: "lexicon-generator", targets: ["lexicon-generator"]),
+		.plugin(name: "LexiconCodeGeneratorPlugin", targets: ["LexiconCodeGeneratorPlugin"])
 	],
 	dependencies: [
-		.package(url: "https://github.com/screensailor/Hope", .branch("trunk")),
+		.package(url: "https://github.com/screensailor/Hope", branch: "trunk"),
 		.package(url: "https://github.com/apple/swift-collections", from: "1.0.0"),
+		.package(url: "https://github.com/apple/swift-argument-parser", from: "1.1.2")
 	],
 	targets: [
 		
@@ -28,7 +31,7 @@ let package = Package(
 			dependencies: [
 				.product(name: "Collections", package: "swift-collections")
 			],
-			swiftSettings: [.define("EDITOR")] // TODO: meke this opt in
+			swiftSettings: [.define("EDITOR")] // TODO: make this opt in
 		),
 		.testTarget(
 			name: "LexiconTests",
@@ -109,5 +112,28 @@ let package = Package(
 				.copy("Resources"),
 			]
 		),
+
+		// MARK: Swift Package Manager Plugin
+
+		.executableTarget(
+			name: "lexicon-generator",
+			dependencies: [
+				.target(name: "LexiconGenerators"),
+				.product(name: "ArgumentParser", package: "swift-argument-parser")
+			]
+		),
+		.plugin(
+			name: "LexiconCodeGeneratorPlugin",
+			capability: .command(
+				intent: .custom(
+					verb: "lexicon-generate",
+					description: "Generate swift code from your lexicon files"
+				),
+				permissions: [
+					.writeToPackageDirectory(reason: "This plugin generates code from a lexicon document")
+				]
+			),
+			dependencies: ["lexicon-generator"]
+		)
 	]
 )
