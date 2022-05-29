@@ -8,7 +8,6 @@ import UniformTypeIdentifiers
 public enum JSONClasses: CodeGenerator {
 	
 	public static let utType: UTType = .json
-	public static let command = "json"
 
 	public static func generate(_ json: Lexicon.Graph.JSON) throws -> Data {
 		let encoder = Encoder()

@@ -10,7 +10,6 @@ public enum Generator: CodeGenerator {
 	// TODO: prefixes?
 	
 	public static let utType = UTType.swiftSource
-	public static let command = "swiftLibrary"
 
 	public static func generate(_ json: Lexicon.Graph.JSON) throws -> Data {
 		guard let o = json.swift().data(using: .utf8) else {

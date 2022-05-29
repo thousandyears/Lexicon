@@ -10,7 +10,6 @@ public enum Generator: CodeGenerator {
 	// TODO: prefixes?
 	
 	public static let utType = UTType(filenameExtension: "kt", conformingTo: .sourceCode)!
-	public static let command = "kotlin"
 	
 	public static func generate(_ json: Lexicon.Graph.JSON) throws -> Data {
 		return Data(json.kotlin().utf8)
