@@ -119,7 +119,8 @@ let package = Package(
 			name: "lexicon-generate",
 			dependencies: [
 				.target(name: "LexiconGenerators"),
-				.product(name: "ArgumentParser", package: "swift-argument-parser")
+				.product(name: "ArgumentParser", package: "swift-argument-parser"),
+				.product(name: "Collections", package: "swift-collections")
 			]
 		),
 		.plugin(
