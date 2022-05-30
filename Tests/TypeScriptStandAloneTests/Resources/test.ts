@@ -1,20 +1,20 @@
 // I
 interface I extends TypeLocalized, SourceCodeIdentifiable { }
 interface TypeLocalized {
-    localized: string
+	localized: string
 }
 interface SourceCodeIdentifiable {
-    identifier: string
+	identifier: string
 }
 // L
 class L implements I {
-    localized: string;
-    identifier: string;
+	localized: string;
+	identifier: string;
 
-    constructor(id: string, localized = "") {
-        this.localized = localized;
-        this.identifier = id;
-    }
+	constructor(id: string, localized = "") {
+		this.localized = localized;
+		this.identifier = id;
+	}
 }
 // MARK: generated types
 class L_test extends L implements I_test {

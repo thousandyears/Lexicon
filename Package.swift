@@ -13,7 +13,7 @@ let package = Package(
 		.library(name: "SwiftLexicon", targets: ["SwiftLexicon"]),
 		.library(name: "SwiftStandAlone", targets: ["SwiftStandAlone"]),
 		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
-        .library(name: "TypeScriptStandAlone", targets: ["TypeScriptStandAlone"]),
+		.library(name: "TypeScriptStandAlone", targets: ["TypeScriptStandAlone"]),
 		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
 	],
 	dependencies: [
@@ -51,7 +51,7 @@ let package = Package(
 					"SwiftLexicon",
 					"SwiftStandAlone",
 					"KotlinStandAlone",
-                    "TypeScriptStandAlone",
+					"TypeScriptStandAlone",
 				]
 			),
 		
@@ -111,24 +111,24 @@ let package = Package(
 				.copy("Resources"),
 			]
 		),
-        
-        // MARK: TypeScriptStandAlones
-        
-            .target(
-                name: "TypeScriptStandAlone",
-                dependencies: [
-                    "Lexicon",
-                ]
-            ),
-        .testTarget(
-            name: "TypeScriptStandAloneTests",
-            dependencies: [
-                "Hope",
-                "TypeScriptStandAlone"
-            ],
-            resources: [
-                .copy("Resources"),
-            ]
-        ),
+		
+		// MARK: TypeScriptStandAlones
+		
+			.target(
+				name: "TypeScriptStandAlone",
+				dependencies: [
+					"Lexicon",
+				]
+			),
+		.testTarget(
+			name: "TypeScriptStandAloneTests",
+			dependencies: [
+				"Hope",
+				"TypeScriptStandAlone"
+			],
+			resources: [
+				.copy("Resources"),
+			]
+		),
 	]
 )
