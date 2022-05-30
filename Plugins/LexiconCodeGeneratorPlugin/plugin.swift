@@ -5,6 +5,7 @@ import Foundation
 struct LexiconCodeGeneratorPlugin: BuildToolPlugin {
 
 	func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
+		print("❌❌❌❌❌❌❌❌❌❌❌❌❌")
 		if let enumerator = FileManager.default.enumerator(atPath: target.directory.string) {
 			for case let path as String in enumerator where path.hasSuffix(".lexicon") || path.hasSuffix(".taskpaper") {
 				return try [
