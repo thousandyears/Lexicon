@@ -124,15 +124,7 @@ let package = Package(
 		),
 		.plugin(
 			name: "LexiconCodeGeneratorPlugin",
-			capability: .command(
-				intent: .custom(
-					verb: "lexicon-generate",
-					description: "Generate swift code from your lexicon files"
-				),
-				permissions: [
-					.writeToPackageDirectory(reason: "This plugin generates code from a lexicon document")
-				]
-			),
+			capability: .buildTool(),
 			dependencies: ["lexicon-generate"]
 		)
 	]
