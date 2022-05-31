@@ -115,14 +115,14 @@ let package = Package(
 
 		// MARK: Swift Package Manager Plugin
 
-		.executableTarget(
-			name: "lexicon-generate",
-			dependencies: [
-				.target(name: "LexiconGenerators"),
-				.product(name: "ArgumentParser", package: "swift-argument-parser"),
-				.product(name: "Collections", package: "swift-collections")
-			]
-		),
+			.executableTarget(
+				name: "lexicon-generate",
+				dependencies: [
+					.target(name: "LexiconGenerators"),
+					.product(name: "ArgumentParser", package: "swift-argument-parser"),
+					.product(name: "Collections", package: "swift-collections")
+				]
+			),
 		.plugin(
 			name: "LexiconCodeGeneratorPlugin",
 			capability: .buildTool(),

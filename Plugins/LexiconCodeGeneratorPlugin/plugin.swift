@@ -5,19 +5,25 @@ import Foundation
 struct LexiconCodeGeneratorPlugin: BuildToolPlugin {
 
 	func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
-		print("❌❌❌❌❌❌❌❌❌❌❌❌❌")
-		if let enumerator = FileManager.default.enumerator(atPath: target.directory.string) {
-			for case let path as String in enumerator where path.hasSuffix(".lexicon") || path.hasSuffix(".taskpaper") {
-				return try [
-					.prebuildCommand(
-						displayName: "Generate Swift Lexicon Identifiers",
-						executable: context.tool(named: "lexicon-generate").path,
-						arguments: ["--type", "swift", "--quiet"],
-						outputFilesDirectory: Path(path).removingLastComponent()
-					)
-				]
+		let lexicon = try context.tool(named: "lexicon-generate")
+		let output = context.pluginWorkDirectory.appending("GeneratedSources")
+		return FileManager.default.enumerator(atPath: target.directory.string)?
+			.compactMap { value in (value as? String).map(target.directory.appending) }
+			.filter { path in
+				["taskpaper", "lexicon"].contains(path.extension)
 			}
-		}
-		return []
+			.map { input in
+				return .buildCommand(
+					displayName: "Generate Swift Lexicon Identifiers for \(input)",
+					executable: lexicon.path,
+					arguments: [
+						input.string,
+						"--output", output.string,
+						"--type", "swift"
+					],
+					inputFiles: [input],
+					outputFiles: [output.appending("\(input.stem).swift")]
+				)
+			} ?? []
 	}
 }
