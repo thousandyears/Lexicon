@@ -28,6 +28,20 @@ final class Lexicon™: Hopes {
 		
 		// TODO: ...
 	}
+
+	func test_example() async throws {
+
+		let root = try await Lexicon.from(
+			TaskPaper(example).decode()
+		).root
+
+		let userId = try await root["user", "id"].hopefully()
+		let collectionId = try await root["db", "collection", "id"].hopefully()
+
+		let isCollectionId = await userId.is(collectionId)
+
+		hope(isCollectionId) == true
+	}
 }
 
 private let taskpaper = """
@@ -76,4 +90,13 @@ root:
 				+ root.type.ux.journey
 					json:
 					taskpaper:
+"""
+
+private let example = """
+root:
+	db:
+		collection:
+			id:
+	user:
+	+ root.db.collection
 """

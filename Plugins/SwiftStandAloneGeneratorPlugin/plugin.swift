@@ -2,19 +2,17 @@ import PackagePlugin
 import Foundation
 
 @main
-struct LexiconCodeGeneratorPlugin: BuildToolPlugin {
+struct SwiftStandAloneGeneratorPlugin: BuildToolPlugin {
 
 	func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
 		let lexicon = try context.tool(named: "lexicon-generate")
 		let output = context.pluginWorkDirectory.appending("GeneratedSources")
 		return FileManager.default.enumerator(atPath: target.directory.string)?
 			.compactMap { value in (value as? String).map(target.directory.appending) }
-			.filter { path in
-				["taskpaper", "lexicon"].contains(path.extension)
-			}
+			.filter { path in (path.extension ?? "").hasSuffix("lexicon") }
 			.map { input in
-				return .buildCommand(
-					displayName: "Generate Swift Lexicon Identifiers for \(input)",
+				.buildCommand(
+					displayName: "Generate \(input)",
 					executable: lexicon.path,
 					arguments: [
 						input.string,

@@ -15,7 +15,8 @@ let package = Package(
 		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
 		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
 		.executable(name: "lexicon-generate", targets: ["lexicon-generate"]),
-		.plugin(name: "LexiconCodeGeneratorPlugin", targets: ["LexiconCodeGeneratorPlugin"])
+		.plugin(name: "SwiftStandAloneGeneratorPlugin", targets: ["SwiftStandAloneGeneratorPlugin"]),
+		.plugin(name: "SwiftLibraryGeneratorPlugin", targets: ["SwiftLibraryGeneratorPlugin"]),
 	],
 	dependencies: [
 		.package(url: "https://github.com/screensailor/Hope", branch: "trunk"),
@@ -23,9 +24,6 @@ let package = Package(
 		.package(url: "https://github.com/apple/swift-argument-parser", from: "1.1.2")
 	],
 	targets: [
-		
-		// MARK: Lexicon
-		
 		.target(
 			name: "Lexicon",
 			dependencies: [
@@ -39,92 +37,74 @@ let package = Package(
 				"Hope",
 				"Lexicon"
 			],
-			resources: [
-				.copy("Resources")
+			resources: [.copy("Resources")]
+		),
+		.target(
+			name: "LexiconGenerators",
+			dependencies: [
+				"Lexicon",
+				"SwiftLexicon",
+				"SwiftStandAlone",
+				"KotlinStandAlone"
 			]
 		),
-		
-		// MARK: LexiconGenerators
-		
-			.target(
-				name: "LexiconGenerators",
-				dependencies: [
-					"Lexicon",
-					"SwiftLexicon",
-					"SwiftStandAlone",
-					"KotlinStandAlone"
-				]
-			),
-		
-		// MARK: SwiftLexicon
-		
-			.target(
-				name: "SwiftLexicon",
-				dependencies: [
-					"Lexicon",
-				]
-			),
+		.target(
+			name: "SwiftLexicon",
+			dependencies: [
+				"Lexicon"
+			]
+		),
 		.testTarget(
 			name: "SwiftLexiconTests",
 			dependencies: [
 				"Hope",
 				"SwiftLexicon"
 			],
-			resources: [
-				.copy("Resources"),
+			resources: [.copy("Resources")]
+		),
+		.target(
+			name: "SwiftStandAlone",
+			dependencies: [
+				"Lexicon",
 			]
 		),
-		
-		// MARK: SwiftStandAlone
-		
-			.target(
-				name: "SwiftStandAlone",
-				dependencies: [
-					"Lexicon",
-				]
-			),
 		.testTarget(
 			name: "SwiftStandAloneTests",
 			dependencies: [
 				"Hope",
 				"SwiftStandAlone"
 			],
-			resources: [
-				.copy("Resources"),
+			resources: [.copy("Resources")]
+		),
+		.target(
+			name: "KotlinStandAlone",
+			dependencies: [
+				"Lexicon",
 			]
 		),
-		
-		// MARK: KotlinStandAlones
-		
-			.target(
-				name: "KotlinStandAlone",
-				dependencies: [
-					"Lexicon",
-				]
-			),
 		.testTarget(
 			name: "KotlinStandAloneTests",
 			dependencies: [
 				"Hope",
 				"KotlinStandAlone"
 			],
-			resources: [
-				.copy("Resources"),
+			resources: [.copy("Resources")]
+		),
+		.executableTarget(
+			name: "lexicon-generate",
+			dependencies: [
+				.target(name: "LexiconGenerators"),
+				.product(name: "ArgumentParser", package: "swift-argument-parser"),
+				.product(name: "Collections", package: "swift-collections")
 			]
 		),
-
-		// MARK: Swift Package Manager Plugin
-
-			.executableTarget(
-				name: "lexicon-generate",
-				dependencies: [
-					.target(name: "LexiconGenerators"),
-					.product(name: "ArgumentParser", package: "swift-argument-parser"),
-					.product(name: "Collections", package: "swift-collections")
-				]
-			),
 		.plugin(
-			name: "LexiconCodeGeneratorPlugin",
+			name: "SwiftStandAloneGeneratorPlugin",
+			capability: .buildTool(),
+			dependencies: ["lexicon-generate"]
+		),
+		.plugin(
+			name: "SwiftLibraryGeneratorPlugin",
 			capability: .buildTool(),
 			dependencies: ["lexicon-generate"]
 		)

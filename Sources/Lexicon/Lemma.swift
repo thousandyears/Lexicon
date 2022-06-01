@@ -358,8 +358,15 @@ extension Lemma {
 	
 	func lazy_ownType() -> [ID: Unowned<Lemma>] {
 		var o: [ID: Unowned<Lemma>] = [:]
-		for id in node.type {
-			o[id] = lexicon.dictionary[id].map(Unowned.init)
+		if isGraphNode {
+			for id in node.type {
+				o[id] = lexicon.dictionary[id].map(Unowned.init)
+			}
+		} else {
+			for id in (parent?.node.type).or([]) {
+				guard let node = lexicon.dictionary[id]?.children[name] else { continue }
+				o[node.id] = Unowned(node)
+			}
 		}
 		return o
 	}
