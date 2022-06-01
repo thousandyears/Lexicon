@@ -29,10 +29,10 @@ final class Lexicon™: Hopes {
 		// TODO: ...
 	}
 
-	func test_example() async throws {
+	func test_inherited_node_own_type() async throws {
 
 		let root = try await Lexicon.from(
-			TaskPaper(example).decode()
+			TaskPaper(inherited_node_own_type).decode()
 		).root
 
 		let userId = try await root["user", "id"].hopefully()
@@ -92,7 +92,7 @@ root:
 					taskpaper:
 """
 
-private let example = """
+private let inherited_node_own_type = """
 root:
 	db:
 		collection:
