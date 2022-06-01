@@ -11,16 +11,17 @@ struct SwiftStandAloneGeneratorPlugin: BuildToolPlugin {
 			.compactMap { value in (value as? String).map(target.directory.appending) }
 			.filter { path in (path.extension ?? "").hasSuffix("lexicon") }
 			.map { input in
-				.buildCommand(
+				let file = output.appending("\(input.stem).swift")
+				return .buildCommand(
 					displayName: "Generate \(input)",
 					executable: lexicon.path,
 					arguments: [
 						input.string,
-						"--output", output.string,
+						"--output", file.string,
 						"--type", "swift"
 					],
 					inputFiles: [input],
-					outputFiles: [output.appending("\(input.stem).swift")]
+					outputFiles: [file]
 				)
 			} ?? []
 	}

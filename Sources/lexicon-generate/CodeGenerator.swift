@@ -32,21 +32,22 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 		if isLogging {
 			print("\(name) lexicon")
 		}
-		let output = self.output ?? input.deletingLastPathComponent()
 		let lexicon = try await Lexicon.from(
 			TaskPaper(Data(contentsOf: input)).decode()
 		)
 		let json = await lexicon.json()
 		for commandName in type {
 			guard
-				let generator = Lexicon.Graph.JSON.generators.named(commandName),
+				let generator = Lexicon.Graph.JSON.generators.find(commandName),
 				let `extension` = generator.utType.preferredFilenameExtension
 			else { continue }
-			let url = output.appendingPathComponent(name)
+			let file = output ?? input
+				.deletingLastPathComponent()
+				.appendingPathComponent(name)
 				.appendingPathExtension(`extension`)
-			if isLogging { print(url.path) }
+			if isLogging { print(file.path) }
 			try generator.generate(json)
-				.write(to: url)
+				.write(to: file)
 		}
 	}
 }
@@ -55,7 +56,7 @@ typealias Generators = OrderedDictionary<String, CodeGenerator.Type>
 
 extension Generators {
 
-	func named(_ command: String) -> CodeGenerator.Type? {
+	func find(_ command: String) -> CodeGenerator.Type? {
 		first { _, value in value.command == command }?.value
 	}
 }
