@@ -30,16 +30,16 @@ interface TypeLocalized {
 	localized: string
 }
 interface SourceCodeIdentifiable {
-	identifier: string
+	__: string
 }
 // L
 class L implements I {
 	localized: string;
-	identifier: string;
+	__: string;
 
 	constructor(id: string, localized = "") {
 		this.localized = localized;
-		this.identifier = id;
+		this.__ = id;
 	}
 }
 // MARK: generated types
@@ -113,7 +113,7 @@ private extension Lexicon.Graph.Node.Class.JSON {
 		
 		for child in children ?? [] {
 			let id = "\(id).\(child)"
-			lines += "  \(child) = new \(L)_\(id.idToClassSuffix)(`${this.identifier}.\(child)`);"
+			lines += "  \(child) = new \(L)_\(id.idToClassSuffix)(`${this.__}.\(child)`);"
 		}
 		
 		for (synonym, protonym) in (synonyms?.sortedByLocalizedStandard(by: \.key) ?? []) {
