@@ -3,111 +3,132 @@
 import PackageDescription
 
 let package = Package(
-	name: "Lexicon",
-	platforms: [
-		.macOS(.v11),
-		.iOS(.v14)
-	],
-	products: [
-		.library(name: "Lexicon", targets: ["Lexicon"]),
-		.library(name: "SwiftLexicon", targets: ["SwiftLexicon"]),
-		.library(name: "SwiftStandAlone", targets: ["SwiftStandAlone"]),
-		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
-		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
-	],
-	dependencies: [
-		.package(url: "https://github.com/screensailor/Hope", .branch("trunk")),
-		.package(url: "https://github.com/apple/swift-collections", from: "1.0.0"),
-	],
-	targets: [
-		
-		// MARK: Lexicon
-		
-		.target(
-			name: "Lexicon",
-			dependencies: [
-				.product(name: "Collections", package: "swift-collections")
-			],
-			swiftSettings: [.define("EDITOR")] // TODO: meke this opt in
-		),
-		.testTarget(
-			name: "LexiconTests",
-			dependencies: [
-				"Hope",
-				"Lexicon"
-			],
-			resources: [
-				.copy("Resources")
-			]
-		),
-		
-		// MARK: LexiconGenerators
-		
-			.target(
-				name: "LexiconGenerators",
-				dependencies: [
-					"Lexicon",
-					"SwiftLexicon",
-					"SwiftStandAlone",
-					"KotlinStandAlone"
-				]
-			),
-		
-		// MARK: SwiftLexicon
-		
-			.target(
-				name: "SwiftLexicon",
-				dependencies: [
-					"Lexicon",
-				]
-			),
-		.testTarget(
-			name: "SwiftLexiconTests",
-			dependencies: [
-				"Hope",
-				"SwiftLexicon"
-			],
-			resources: [
-				.copy("Resources"),
-			]
-		),
-		
-		// MARK: SwiftStandAlone
-		
-			.target(
-				name: "SwiftStandAlone",
-				dependencies: [
-					"Lexicon",
-				]
-			),
-		.testTarget(
-			name: "SwiftStandAloneTests",
-			dependencies: [
-				"Hope",
-				"SwiftStandAlone"
-			],
-			resources: [
-				.copy("Resources"),
-			]
-		),
-		
-		// MARK: KotlinStandAlones
-		
-			.target(
-				name: "KotlinStandAlone",
-				dependencies: [
-					"Lexicon",
-				]
-			),
-		.testTarget(
-			name: "KotlinStandAloneTests",
-			dependencies: [
-				"Hope",
-				"KotlinStandAlone"
-			],
-			resources: [
-				.copy("Resources"),
-			]
-		),
-	]
+    name: "Lexicon",
+    platforms: [
+        .macOS(.v11),
+        .iOS(.v14)
+    ],
+    products: [
+        .library(name: "Lexicon", targets: ["Lexicon"]),
+        .library(name: "SwiftLexicon", targets: ["SwiftLexicon"]),
+        .library(name: "SwiftStandAlone", targets: ["SwiftStandAlone"]),
+        .library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
+        .library(name: "CSharpStandAlone", targets: ["CSharpStandAlone"]),
+        .library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/screensailor/Hope", .branch("trunk")),
+        .package(url: "https://github.com/apple/swift-collections", from: "1.0.0"),
+    ],
+    targets: [
+        
+        // MARK: Lexicon
+        
+        .target(
+            name: "Lexicon",
+            dependencies: [
+                .product(name: "Collections", package: "swift-collections")
+            ],
+            swiftSettings: [.define("EDITOR")] // TODO: meke this opt in
+        ),
+        .testTarget(
+            name: "LexiconTests",
+            dependencies: [
+                "Hope",
+                "Lexicon"
+            ],
+            resources: [
+                .copy("Resources")
+            ]
+        ),
+        
+        // MARK: LexiconGenerators
+        
+            .target(
+                name: "LexiconGenerators",
+                dependencies: [
+                    "Lexicon",
+                    "SwiftLexicon",
+                    "SwiftStandAlone",
+                    "KotlinStandAlone",
+                    "CSharpStandAlone"
+                ]
+            ),
+        
+        // MARK: SwiftLexicon
+        
+            .target(
+                name: "SwiftLexicon",
+                dependencies: [
+                    "Lexicon",
+                ]
+            ),
+        .testTarget(
+            name: "SwiftLexiconTests",
+            dependencies: [
+                "Hope",
+                "SwiftLexicon"
+            ],
+            resources: [
+                .copy("Resources"),
+            ]
+        ),
+        
+        // MARK: SwiftStandAlone
+        
+            .target(
+                name: "SwiftStandAlone",
+                dependencies: [
+                    "Lexicon",
+                ]
+            ),
+        .testTarget(
+            name: "SwiftStandAloneTests",
+            dependencies: [
+                "Hope",
+                "SwiftStandAlone"
+            ],
+            resources: [
+                .copy("Resources"),
+            ]
+        ),
+        
+        // MARK: KotlinStandAlones
+        
+            .target(
+                name: "KotlinStandAlone",
+                dependencies: [
+                    "Lexicon",
+                ]
+            ),
+        .testTarget(
+            name: "KotlinStandAloneTests",
+            dependencies: [
+                "Hope",
+                "KotlinStandAlone"
+            ],
+            resources: [
+                .copy("Resources"),
+            ]
+        ),
+        
+        // MARK: CSharpStandAlone
+        
+            .target(
+                name: "CSharpStandAlone",
+                dependencies: [
+                    "Lexicon",
+                ]
+            ),
+        .testTarget(
+            name: "CSharpStandAloneTests",
+            dependencies: [
+                "Hope",
+                "CSharpStandAlone"
+            ],
+            resources: [
+                .copy("Resources"),
+            ]
+        ),
+    ]
 )
