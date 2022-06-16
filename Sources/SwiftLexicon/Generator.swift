@@ -10,7 +10,7 @@ public enum Generator: CodeGenerator {
 	// TODO: prefixes?
 	
 	public static let utType = UTType.swiftSource
-	public static let command = "swiftLibrary"
+	public static let command = "swift"
 
 	public static func generate(_ json: Lexicon.Graph.JSON) throws -> Data {
 		guard let o = json.swift().data(using: .utf8) else {
@@ -25,7 +25,7 @@ private extension Lexicon.Graph.JSON {
 	func swift() -> String {
 		
 		return """
-		@_exported import SwiftLexicon // From https://github.com/screensailor/Lexicon
+		@_exported import SwiftLexicon // https://github.com/thousandyears/Lexicon
 		import Foundation
 		
 		public let \(name) = L_\(name)("\(name)")

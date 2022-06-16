@@ -11,14 +11,14 @@ struct SwiftLibraryGeneratorPlugin: BuildToolPlugin {
 			.compactMap { value in (value as? String).map(target.directory.appending) }
 			.filter { path in (path.extension ?? "").hasSuffix("lexicon") }
 			.map { input in
-				let file = output.appending("\(input.stem).swift")
+				let file = output.appending(input.stem)
 				return .buildCommand(
 					displayName: "Generate \(input)",
 					executable: lexicon.path,
 					arguments: [
 						input.string,
 						"--output", file.string,
-						"--type", "swiftLibrary"
+						"--type", "swift"
 					],
 					inputFiles: [input],
 					outputFiles: [file]

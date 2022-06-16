@@ -13,13 +13,28 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 		version: "1.0.0"
 	)
 
-	@Argument
+	@Argument(help: "URL to the lexicon")
 	var input: URL
 
-	@Option(name: .shortAndLong)
+	@Option(
+		name: .shortAndLong,
+		help: "The file path of where the code should be output, if not specified the same directory as the lexicon will be used"
+	)
 	var output: URL?
 
-	@Option(name: .shortAndLong)
+	@Option(
+		name: .shortAndLong,
+		help:
+		"""
+		Types of code to generate from the lexicon. Comma separated values.
+
+		Generators:
+			\(Lexicon.Graph.JSON.generators.commandHelp)
+
+		Example:
+			--type swift,kotlin
+		"""
+	)
 	var type: [String]
 
 	@Flag(name: .shortAndLong)
@@ -36,18 +51,24 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 			TaskPaper(Data(contentsOf: input)).decode()
 		)
 		let json = await lexicon.json()
-		for commandName in type {
-			guard
-				let generator = Lexicon.Graph.JSON.generators.find(commandName),
-				let `extension` = generator.utType.preferredFilenameExtension
-			else { continue }
-			let file = output ?? input
-				.deletingLastPathComponent()
-				.appendingPathComponent(name)
-				.appendingPathExtension(`extension`)
+		let code = try type.map { command in
+			guard let generator = Lexicon.Graph.JSON.generators.find(command) else {
+				fatalError("Unable to find a generator for \(command)")
+			}
+			guard let `extension` = generator.utType.preferredFilenameExtension else {
+				fatalError("\(command) does not have a valid uniform type identifier: \(generator.utType)")
+			}
+			return (
+				file: output?.appendingPathExtension(`extension`)
+					?? input.deletingLastPathComponent()
+						.appendingPathComponent(name)
+						.appendingPathExtension(`extension`),
+				data: try generator.generate(json)
+			)
+		}
+		for (file, data) in code {
 			if isLogging { print(file.path) }
-			try generator.generate(json)
-				.write(to: file)
+			try data.write(to: file)
 		}
 	}
 }
@@ -55,6 +76,8 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 typealias Generators = OrderedDictionary<String, CodeGenerator.Type>
 
 extension Generators {
+
+	var commandHelp: String { values.map { $0.command }.joined(separator: ", ") }
 
 	func find(_ command: String) -> CodeGenerator.Type? {
 		first { _, value in value.command == command }?.value
@@ -64,7 +87,11 @@ extension Generators {
 extension URL: ExpressibleByArgument {
 
 	public init?(argument: String) {
-		self.init(fileURLWithPath: argument)
+		if argument.hasPrefix("http") {
+			self.init(string: argument)
+		} else {
+			self.init(fileURLWithPath: argument)
+		}
 	}
 }
 
