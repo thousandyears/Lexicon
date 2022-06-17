@@ -13,12 +13,12 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 		version: "1.0.0"
 	)
 
-	@Argument(help: "URL to the lexicon")
+	@Argument(help: "File path or URL to the lexicon")
 	var input: URL
 
 	@Option(
 		name: .shortAndLong,
-		help: "The file path of where the code should be output, if not specified the same directory as the lexicon will be used"
+		help: "Output path excluding extension, if not specified the same directory and name of the lexicon will be used"
 	)
 	var output: URL?
 
@@ -26,7 +26,7 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 		name: .shortAndLong,
 		help:
 		"""
-		Types of code to generate from the lexicon. Comma separated values.
+		Types of code to generate. Comma separated.
 
 		Generators:
 			\(Lexicon.Graph.JSON.generators.commandHelp)
