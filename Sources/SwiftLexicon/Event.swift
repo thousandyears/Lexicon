@@ -52,7 +52,7 @@ public struct Event: @unchecked Sendable, Hashable, Identifiable, CustomStringCo
 		k(\.L) is A
 	}
 	
-	public func `is`<A: I>(_ a: K<A>) -> Bool {
+	public func `is`<A>(_ a: K<A>) -> Bool {
 		k is A && a.____.allSatisfy {
 			k.____[$0] == $1
 		}
