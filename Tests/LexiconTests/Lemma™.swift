@@ -25,4 +25,46 @@ final class Lemma™: Hopes {
 		hope.false(Lemma.isValid(character: "_", appendingTo: "not_another_"))
 		hope.false(Lemma.isValid(character: "_", appendingTo: "")) // TODO: consider allowing this!
 	}
+
+	func test_inherited_node_own_type() async throws {
+
+		let root = try await Lexicon.from(
+			TaskPaper(inherited_node_own_type).decode()
+		).root
+
+		let userId = try await root["user", "id"].hopefully()
+		let collectionId = try await root["db", "collection", "id"].hopefully()
+
+		let isCollectionId = await userId.is(collectionId)
+
+		hope(isCollectionId) == true
+	}
+
+	func test_inherited_node_own_type_nested() async throws {
+
+		let root = try await Lexicon.from(
+			TaskPaper(inherited_node_own_type).decode()
+		).root
+
+		let userbc = try await root["user", "b", "c"].hopefully()
+		let abc = try await root["a", "b", "c"].hopefully()
+
+		let matches = await userbc.is(abc)
+
+		hope(matches) == true
+	}
 }
+
+private let inherited_node_own_type = """
+root:
+	a:
+		b:
+			c:
+	db:
+		collection:
+			id:
+	user:
+	+ root.db.collection
+	+ root.a
+"""
+
