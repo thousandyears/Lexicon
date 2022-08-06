@@ -46,20 +46,35 @@ final class Lemma™: Hopes {
 			TaskPaper(inherited_node_own_type).decode()
 		).root
 
-		let userbc = try await root["user", "b", "c"].hopefully()
-		let abc = try await root["a", "b", "c"].hopefully()
+		do {
+			let a = try await root["user", "b", "c"].hopefully()
+			let b = try await root["a", "b", "c"].hopefully()
+			let matches = await a.is(b)
+			hope(matches) == true
+		}
 
-		let matches = await userbc.is(abc)
-
-		hope(matches) == true
+		do {
+			let a = try await root["a", "two", "two", "two", "three"].hopefully()
+			let b = try await root["one", "two", "three"].hopefully()
+			let matches = await a.is(b)
+			hope(matches) == true
+		}
 	}
 }
 
 private let inherited_node_own_type = """
 root:
 	a:
+	+ root.one
 		b:
+		+ root.two
 			c:
+			+ root.three
+	one:
+		two:
+		+ root.a
+			three:
+			+ root.b
 	db:
 		collection:
 			id:
