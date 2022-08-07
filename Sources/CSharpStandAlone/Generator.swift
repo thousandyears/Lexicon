@@ -16,28 +16,20 @@ private extension Lexicon.Graph.JSON {
     
     func cSharp() -> String {
         return """
-public interface I_TypeLocalised
+global using static \(name.capitalized)Lexicon;
+
+public static class \(name.capitalized)Lexicon
 {
-    string Localised { get; set; }
+    public static I\(name.capitalized) \(name) = new L\(name.capitalized)(nameof(\(name)));
 }
 
-public interface I_SourceCodeIdentifiable
+public abstract class LexiconType
 {
-    string Identifier { get; }
-}
+    protected string Identifier { get; }
 
-public interface I_LexiconType : I_TypeLocalised, I_SourceCodeIdentifiable { }
-
-public class L_LexiconType : I_LexiconType
-{
-    public string Identifier { get; private set; }
-
-    public string Localised { get; set; }
-
-    public L_LexiconType(string identifer, string localised = "")
+    public LexiconType(string identifier)
     {
-        Identifier = identifer;
-        Localised = localised;
+        Identifier = identifier;
     }
 
     public override string ToString()
@@ -47,8 +39,6 @@ public class L_LexiconType : I_LexiconType
 }
 
 // MARK: generated types
-
-I_\(name) \(name) = new L_\(name)(nameof(\(name)));
 
 \(classes.flatMap{ $0.cSharp(prefix: ("L", "I")) }.joined(separator: "\n"))
 
@@ -67,42 +57,54 @@ private extension Lexicon.Graph.Node.Class.JSON {
         }
         
         var lines: [String] = []
-        let T = id.idToClassSuffix
+        let T = id.split(separator: ".").map{$0.capitalized}.joined().idToClassSuffix
         let (L, I) = prefix
         
         let supertype = supertype?
+            .split(separator: ".")
+            .map({$0.capitalized})
+            .joined()
             .replacingOccurrences(of: "_", with: "__")
-            .replacingOccurrences(of: ".", with: "_")
-            .replacingOccurrences(of: "__&__", with: ", I_")
+            .replacingOccurrences(of: ".", with: "")
+            .replacingOccurrences(of: "__&__", with: ", I")
         
-        if let protonym = protonym {
-            lines += """
-public sealed class \(L)_\(T) : \(L)_LexiconType, \(I)_\(T), \(I)_\(protonym.idToClassSuffix)
-{
-    public \(L)_\(T)(string identifer, string localised = "") : base(identifer, localised) { }
-}
-"""
+        if let protonym = protonym?.split(separator: ".").map({$0.capitalized}).joined().idToClassSuffix {
+            lines += "public sealed class \(L)\(T) : LexiconType, \(I)\(T), \(I)\(protonym)"
+            
         } else {
-            lines += """
-public sealed class \(L)_\(T) : \(L)_LexiconType, \(I)_\(T)\(supertype.map{ ", \(I)_\($0)" } ?? "")
-{
-    public \(L)_\(T)(string identifer, string localised = "") : base(identifer, localised) { }
-}
-"""
+            lines += "public sealed class \(L)\(T) : LexiconType, \(I)\(T)\(supertype.map{ ", \(I)\($0)" } ?? "")"
         }
         
-        let line = "public interface \(I)_\(T) : \(I)\(supertype.map{ "_\($0)" } ?? "_LexiconType")"
-        
-        lines += line + " {"
+        lines += "{"
         
         for child in children ?? [] {
-            let id = "\(id).\(child)"
-            lines += "\t\(I)_\(id.idToClassSuffix) \(child) => new \(L)_\(id.idToClassSuffix)($\"{Identifier}.{nameof(\(child))}\");"
+            let id = "\(T).\(child.capitalized)"
+            lines += "\tpublic \(I)\(id.idToClassSuffix) \(child) => new \(L)\(id.idToClassSuffix)($\"{Identifier}.{nameof(\(child))}\");"
+        }
+        
+        // TODO: Generate vars for interface'd properties
+        
+        for (synonym, protonym) in (synonyms?.sortedByLocalizedStandard(by: \.key) ?? []) {
+            let id = "\(T).\(synonym.capitalized)"
+            lines += "\tpublic \(I)\(id.idToClassSuffix) \(synonym) => new \(L)\(id.idToClassSuffix)($\"{Identifier}.{nameof(\(protonym))}\");"
+        }
+        
+        lines += "\n\tpublic \(L)\(T)(string identifier) : base(identifier) { }"
+        
+        lines += "}"
+        
+        lines += "public interface \(I)\(T)\(supertype.map{ " : \(I)\($0)" } ?? "")"
+        
+        lines += "{"
+        
+        for child in children ?? [] {
+            let id = "\(T).\(child.capitalized)"
+            lines += "\t\(I)\(id.idToClassSuffix) \(child) { get }"
         }
         
         for (synonym, protonym) in (synonyms?.sortedByLocalizedStandard(by: \.key) ?? []) {
-            let id = "\(id).\(synonym)"
-            lines += "\t\(I)_\(id.idToClassSuffix) \(synonym) => new \(L)_\(id.idToClassSuffix)($\"{Identifier}.{nameof(\(protonym))}\");"
+            let id = "\(T).\(synonym.capitalized)"
+            lines += "\t\(I)\(id.idToClassSuffix) \(synonym) { get }"
         }
         
         lines += "}"
@@ -115,7 +117,7 @@ private extension String {
     
     var idToClassSuffix: String {
         replacingOccurrences(of: "_", with: "__")
-            .replacingOccurrences(of: ".", with: "_")
-            .replacingOccurrences(of: "_&_", with: "_")
+            .replacingOccurrences(of: ".", with: "")
+            .replacingOccurrences(of: "_&_", with: "")
     }
 }

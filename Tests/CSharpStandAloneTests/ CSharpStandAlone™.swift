@@ -3,7 +3,7 @@
 @_exported import Lexicon
 @_exported import CSharpStandAlone
 
-final class SwiftLexicon™: Hopes {
+final class CSharpLexicon™: Hopes {
 	
 	func test_generator() async throws {
 		
