@@ -362,9 +362,10 @@ extension Lemma {
 			for id in node.type {
 				o[id] = lexicon.dictionary[id].map(Unowned.init)
 			}
-		} else {
-			for id in (parent?.node.type).or([]) {
-				guard let node = lexicon.dictionary[id]?.children[name] else { continue }
+		} else if let parent = lineage.first(where: \.isGraphNode) {
+			let descendant = id.dotPath(after: parent.id).split(separator: ".").map(Name.init)
+			for id in parent.node.type {
+				guard let node = lexicon.dictionary[id]?[descendant] else { continue }
 				o[node.id] = Unowned(node)
 			}
 		}

@@ -51,7 +51,7 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
 			TaskPaper(Data(contentsOf: input)).decode()
 		)
 		let json = await lexicon.json()
-		let code = try type.map { command in
+		let code = try type.map { command -> (URL, Data) in
 			guard let generator = Lexicon.Graph.JSON.generators.find(command) else {
 				fatalError("Unable to find a generator for \(command)")
 			}
