@@ -6,7 +6,7 @@ import Lexicon
 import UniformTypeIdentifiers
 
 public extension UTType {
-	static var typescript = UTType(importedAs: "com.microsoft.ts")
+	static var typescript = UTType(filenameExtension: "ts", conformingTo: .sourceCode)!
 }
 
 public enum Generator: CodeGenerator {
@@ -14,7 +14,8 @@ public enum Generator: CodeGenerator {
 	// TODO: prefixes?
 	
 	public static let utType = UTType.typescript
-	
+	public static let command = "ts"
+
 	public static func generate(_ json: Lexicon.Graph.JSON) throws -> Data {
 		return Data(json.ts().utf8)
 	}
@@ -24,26 +25,19 @@ private extension Lexicon.Graph.JSON {
 	
 	func ts() -> String {
 		return """
-// I
-interface I extends TypeLocalized, SourceCodeIdentifiable { }
-interface TypeLocalized {
-  localized: string;
-}
-interface SourceCodeIdentifiable {
-  __: string;
-  debugDescription: string;
-}
+interface I { }
+
 // L
 class L implements I {
-  localized: string;
-  __: string;
-  get debugDescription() { return this.__ }
-
-  constructor(id: string, localized = "") {
-    this.localized = localized;
-    this.__ = id;
-  }
+	protected id: string;
+	constructor(id: string) {
+		this.id = id;
+	}
+	get ['__']() {
+		return this.id;
+	}
 }
+
 // MARK: generated types
 \(classes.flatMap{ $0.ts(prefix: ("L", "I"), classes: classes) }.joined(separator: "\n"))
 const \(name) = new L_\(name)("\(name)");
@@ -72,7 +66,7 @@ private extension Lexicon.Graph.Node.Class.JSON {
 		}
 		
 		lines += "class \(L)_\(T) extends \(L) implements \(I)_\(T) {"
-				
+
 		let supertype = supertype?
 			.replacingOccurrences(of: "_", with: "__")
 			.replacingOccurrences(of: ".", with: "_")
@@ -127,7 +121,7 @@ private extension Lexicon.Graph.Node.Class.JSON {
 		
 		for child in children ?? [] {
 			let id = "\(id).\(child)"
-			lines += "  \(child): \(L)_\(id.idToClassSuffix);"
+			lines += "  \(child): \(I)_\(id.idToClassSuffix);"
 		}
 		lines += "}"
 		return lines
