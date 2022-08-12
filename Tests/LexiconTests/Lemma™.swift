@@ -25,4 +25,61 @@ final class Lemma™: Hopes {
 		hope.false(Lemma.isValid(character: "_", appendingTo: "not_another_"))
 		hope.false(Lemma.isValid(character: "_", appendingTo: "")) // TODO: consider allowing this!
 	}
+
+	func test_inherited_node_own_type() async throws {
+
+		let root = try await Lexicon.from(
+			TaskPaper(inherited_node_own_type).decode()
+		).root
+
+		let userId = try await root["user", "id"].hopefully()
+		let collectionId = try await root["db", "collection", "id"].hopefully()
+
+		let isCollectionId = await userId.is(collectionId)
+
+		hope(isCollectionId) == true
+	}
+
+	func test_inherited_node_own_type_nested() async throws {
+
+		let root = try await Lexicon.from(
+			TaskPaper(inherited_node_own_type).decode()
+		).root
+
+		do {
+			let a = try await root["user", "b", "c"].hopefully()
+			let b = try await root["a", "b", "c"].hopefully()
+			let matches = await a.is(b)
+			hope(matches) == true
+		}
+
+		do {
+			let a = try await root["a", "two", "two", "two", "three"].hopefully()
+			let b = try await root["one", "two", "three"].hopefully()
+			let matches = await a.is(b)
+			hope(matches) == true
+		}
+	}
 }
+
+private let inherited_node_own_type = """
+root:
+	a:
+	+ root.one
+		b:
+		+ root.two
+			c:
+			+ root.three
+	one:
+		two:
+		+ root.a
+			three:
+			+ root.b
+	db:
+		collection:
+			id:
+	user:
+	+ root.db.collection
+	+ root.a
+"""
+

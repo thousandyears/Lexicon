@@ -13,7 +13,7 @@ public extension Lexicon.Graph.JSON {
 	
 	static let generators: OrderedDictionary<String, CodeGenerator.Type> = [
 		
-		"Swift Library": SwiftLexicon.Generator.self,
+		"Swift": SwiftLexicon.Generator.self,
 		
 		"Swift Stand-Alone": SwiftStandAlone.Generator.self,
 		
