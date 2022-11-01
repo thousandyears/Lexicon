@@ -47,7 +47,7 @@ let package = Package(
 				"SwiftLexicon",
 				"SwiftStandAlone",
 				"KotlinStandAlone",
-        "TypeScriptStandAlone"
+		"TypeScriptStandAlone"
 			]
 		),
 		.target(
@@ -92,7 +92,7 @@ let package = Package(
 			],
 			resources: [.copy("Resources")]
 		),
-    .target(
+		.target(
 			name: "TypeScriptStandAlone",
 			dependencies: [
 				"Lexicon",
@@ -103,6 +103,20 @@ let package = Package(
 			dependencies: [
 				"Hope",
 				"TypeScriptStandAlone"
+			],
+			resources: [.copy("Resources")]
+		),
+		.target(
+			name: "CSharpStandAlone",
+			dependencies: [
+				"Lexicon",
+			]
+		),
+		.testTarget(
+			name: "CSharpStandAloneTests",
+			dependencies: [
+		   	 	"Hope",
+				"CSharpStandAlone"
 			],
 			resources: [.copy("Resources")]
 		),

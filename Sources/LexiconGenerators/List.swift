@@ -7,6 +7,7 @@ import Collections
 import SwiftLexicon
 import SwiftStandAlone
 import KotlinStandAlone
+import CSharpStandAlone
 import TypeScriptStandAlone
 
 public extension Lexicon.Graph.JSON {
@@ -21,6 +22,8 @@ public extension Lexicon.Graph.JSON {
 		
 		"TypeScript Stand-Alone": TypeScriptStandAlone.Generator.self,
 		
+		"C# Stand-Alone": CSharpStandAlone.Generator.self,
+	
 		"JSON Classes & Mixins": JSONClasses.self,
 	]
 }
