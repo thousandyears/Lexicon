@@ -91,12 +91,28 @@ public extension EventContext {
 		}
 		return { [weak self] in (self, p.share().eraseToAnyPublisher(), $0) }
 	}
-	
-	func context() -> (@escaping (Self, Event) async -> ()) -> (Self?, AnyPublisher<Event, Never>, (Self, Event) async -> ()) {
-		{ [weak self] in
-			(self, self?.events.share().eraseToAnyPublisher() ?? Empty().eraseToAnyPublisher(), $0)
-		}
-	}
+    
+    func context() -> (@escaping (Self, Event) async -> ()) -> (Self?, AnyPublisher<Event, Never>, (Self, Event) async -> ()) {
+        { [weak self] in
+            (self, self?.events.share().eraseToAnyPublisher() ?? Empty().eraseToAnyPublisher(), $0)
+        }
+    }
+    
+    func context(catch on: @escaping (Self, Error) -> ()) -> (@escaping (Self, Event) async throws -> ()) -> (Self?, AnyPublisher<Event, Never>, (Self, Event) async -> ()) {
+        { [weak self] ƒ in
+            guard let self else {
+                return (self, Empty().eraseToAnyPublisher(), { _, _ in })
+            }
+            let g = { my, event in
+                do {
+                    try await ƒ(my, event)
+                } catch {
+                    on(self, error)
+                }
+            }
+            return (self, self.events.share().eraseToAnyPublisher(), g)
+        }
+    }
 }
 
 public func >> <O, P, A>(event: A.Type, context: (O?, P, (O, Event) async -> ())) -> AnyCancellable
