@@ -13,16 +13,30 @@ public extension AnyCancellableSetBuilder {
 	
 	typealias Element = AnyCancellable
 	typealias Component = Set<Element>
-	
-	static func buildBlock(_ components: Element...) -> Component {
-		components.reduce(into: [], +=)
-	}
-	
-	static func buildBlock(_ first: Component, _ rest: Component...) -> Component {
-		([first] + rest).reduce(into: [], +=)
-	}
-	
-	// TODO: ...
+    
+    static func buildPartialBlock(first: Element) -> Component {
+        [first]
+    }
+
+    static func buildPartialBlock(first: Component) -> Component {
+        first
+    }
+    
+    static func buildPartialBlock(accumulated: Element, next: Element) -> Component {
+        Set([accumulated, next])
+    }
+    
+    static func buildPartialBlock(accumulated: Element, next: Component) -> Component {
+        next.union([accumulated])
+    }
+    
+    static func buildPartialBlock(accumulated: Component, next: Element) -> Component {
+        accumulated.union([next])
+    }
+    
+    static func buildPartialBlock(accumulated: Component, next: Component) -> Component {
+        accumulated.union(next)
+    }
 }
 
 public extension Set where Element == AnyCancellable {

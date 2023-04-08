@@ -55,7 +55,7 @@ public extension K {
 		get throws { try self[___] }
 	}
 	
-	@inlinable subscript<A>(key: L, as type: A.Type = A.self) -> A {
+	subscript<A>(key: L, as type: A.Type = A.self) -> A {
 		get throws { try (self[key] as? A).try() }
 	}
 }
