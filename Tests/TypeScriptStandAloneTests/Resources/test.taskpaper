@@ -1,17 +1,14 @@
-test:
-	one:
-	+ test.type.odd
-		more:
-			time:
-			+ test
-	two:
-	+ test.type.even
-		timing:
-	type:
-		even:
-			bad:
-			= no.good
-			no:
-				good:
-		odd:
-			good:
+root:
+	plant:
+		leaf:
+	resource:
+		price:
+	tree:
+	+ root.plant
+	+ root.resource
+		branch:
+		+ root.tree
+		twig:
+		= branch
+	twig:
+	= tree.branch

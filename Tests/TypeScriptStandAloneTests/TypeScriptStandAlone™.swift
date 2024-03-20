@@ -14,15 +14,4 @@ final class TypeScriptLexicon™: Hopes {
         		
 		try hope(code) == "test.ts".file().string()
 	}
-	
-	func test_code() throws {
-		/**
-		 @Test
-		 fun generator(){
-			assert(test.one.more.time.one.more.time.identifier == "test.one.more.time.one.more.time")
-			assert(test.two.bad == test.two.no.good)
-			assert(test.two.bad.identifier == "test.two.no.good")
-		 }
-		 */
-	}
 }

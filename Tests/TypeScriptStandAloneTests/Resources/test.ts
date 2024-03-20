@@ -1,89 +1,79 @@
-interface I { }
-
-// L
-class L implements I {
-	protected id: string;
-	constructor(id: string) {
-		this.id = id;
-	}
-	get ['__']() {
-		return this.id;
-	}
+export interface LemmaDetails {
+  id: string;
 }
 
-// MARK: generated types
-class L_test extends L implements I_test {
-  one = new L_test_one(`${this.__}.one`);
-  two = new L_test_two(`${this.__}.two`);
-  type = new L_test_type(`${this.__}.type`);
+export interface I {
+  _: LemmaDetails;
 }
-interface I_test extends I {
-  one: I_test_one;
-  two: I_test_two;
-  type: I_test_type;
+
+export class L implements I {
+  _: LemmaDetails;
+  constructor(parent: string | undefined, name: string) {
+    this._ = {
+     id: parent ? `${parent}.${name}` : name,
+    };
+  }
+  toString(): string {
+    return this._.id;
+  }
 }
-class L_test_one extends L implements I_test_one {
-  good!: L_test_type_odd_good;
-  more = new L_test_one_more(`${this.__}.more`);
+
+export class L_root extends L implements I_root {
+  get plant() { return new L_root_plant(this._.id, `plant`) }
+  get resource() { return new L_root_resource(this._.id, `resource`) }
+  get tree() { return new L_root_tree(this._.id, `tree`) }
+  get twig() { return this.tree.branch; }
 }
-interface I_test_one extends I_test_type_odd {
-  more: I_test_one_more;
+export interface I_root extends I {
+  plant: I_root_plant;
+  resource: I_root_resource;
+  tree: I_root_tree;
+  twig: I_root_tree_branch;
 }
-class L_test_one_more extends L implements I_test_one_more {
-  time = new L_test_one_more_time(`${this.__}.time`);
+
+export class L_root_plant extends L implements I_root_plant {
+  get leaf() { return new L_root_plant_leaf(this._.id, `leaf`) }
 }
-interface I_test_one_more extends I {
-  time: I_test_one_more_time;
+export interface I_root_plant extends I {
+  leaf: I_root_plant_leaf;
 }
-class L_test_one_more_time extends L implements I_test_one_more_time {
-  one!: L_test_one;
-  two!: L_test_two;
-  type!: L_test_type;
+
+export class L_root_plant_leaf extends L implements I_root_plant_leaf {
 }
-type I_test_one_more_time = I_test;
-class L_test_two extends L implements I_test_two {
-  no!: L_test_type_even_no;
-  bad!: L_test_type_even_bad;
-  timing = new L_test_two_timing(`${this.__}.timing`);
+export interface I_root_plant_leaf extends I {
 }
-interface I_test_two extends I_test_type_even {
-  timing: I_test_two_timing;
+
+export class L_root_resource extends L implements I_root_resource {
+  get price() { return new L_root_resource_price(this._.id, `price`) }
 }
-class L_test_two_timing extends L implements I_test_two_timing {
+export interface I_root_resource extends I {
+  price: I_root_resource_price;
 }
-type I_test_two_timing = I;
-class L_test_type extends L implements I_test_type {
-  even = new L_test_type_even(`${this.__}.even`);
-  odd = new L_test_type_odd(`${this.__}.odd`);
+
+export class L_root_resource_price extends L implements I_root_resource_price {
 }
-interface I_test_type extends I {
-  even: I_test_type_even;
-  odd: I_test_type_odd;
+export interface I_root_resource_price extends I {
 }
-class L_test_type_even extends L implements I_test_type_even {
-  no = new L_test_type_even_no(`${this.__}.no`);
-  bad = this.no.good;
+
+export class L_root_tree extends L implements I_root_tree {
+  get branch() { return new L_root_tree_branch(this._.id, `branch`) }
+  get leaf() { return new L_root_plant_leaf(this._.id, `leaf`) }
+  get price() { return new L_root_resource_price(this._.id, `price`) }
+  get twig() { return this.branch; }
 }
-interface I_test_type_even extends I {
-  no: I_test_type_even_no;
+export interface I_root_tree extends I_root_plant, I_root_resource {
+  branch: I_root_tree_branch;
+  twig: I_root_tree_branch;
 }
-type L_test_type_even_bad = L_test_type_even_no_good
-class L_test_type_even_no extends L implements I_test_type_even_no {
-  good = new L_test_type_even_no_good(`${this.__}.good`);
+
+export class L_root_tree_branch extends L implements I_root_tree_branch {
+  get branch() { return new L_root_tree_branch(this._.id, `branch`) }
+  get leaf() { return new L_root_plant_leaf(this._.id, `leaf`) }
+  get price() { return new L_root_resource_price(this._.id, `price`) }
+  get twig() { return this.branch; }
 }
-interface I_test_type_even_no extends I {
-  good: I_test_type_even_no_good;
+export interface I_root_tree_branch extends I_root_tree {
 }
-class L_test_type_even_no_good extends L implements I_test_type_even_no_good {
-}
-type I_test_type_even_no_good = I;
-class L_test_type_odd extends L implements I_test_type_odd {
-  good = new L_test_type_odd_good(`${this.__}.good`);
-}
-interface I_test_type_odd extends I {
-  good: I_test_type_odd_good;
-}
-class L_test_type_odd_good extends L implements I_test_type_odd_good {
-}
-type I_test_type_odd_good = I;
-const test = new L_test("test");
+
+
+export const root = new L_root(undefined, "root");
