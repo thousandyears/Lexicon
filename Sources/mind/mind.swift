@@ -42,7 +42,7 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
         let lexicon = try Lexicon.from(
             TaskPaper(Data(contentsOf: input)).decode()
         )
-        var result: [String: String] = [:]
+        var result: [String: Any] = [:]
         let type = Set(type)
         
         for (id, lemma) in lexicon.dictionary where !type.contains(id) {
@@ -57,16 +57,17 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
                 .appendingPathComponent(lexicon.root.name)
                 .appendingPathExtension("json")
         
-        if var loaded = try? JSONDecoder().decode([String:String].self, from: Data(contentsOf: file)) {
+        
+        
+        if var loaded = try? JSONSerialization.jsonObject(with: Data(contentsOf: file)) as? [String: Any] {
             for id in Set(loaded.keys).subtracting(result.keys) {
                 loaded.removeValue(forKey: id)
             }
             result = loaded.merging(result, uniquingKeysWith: { loaded, _ in loaded })
         }
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        try encoder.encode(result).write(to: file)
+        
+        try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
+            .write(to: file)
     }
 }
 
