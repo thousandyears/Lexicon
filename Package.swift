@@ -15,7 +15,8 @@ let package = Package(
 		.library(name: "KotlinStandAlone", targets: ["KotlinStandAlone"]),
 		.library(name: "TypeScriptStandAlone", targets: ["TypeScriptStandAlone"]),
 		.library(name: "LexiconGenerators", targets: ["LexiconGenerators"]),
-		.executable(name: "lexicon-generate", targets: ["lexicon-generate"]),
+        .executable(name: "lexicon-generate", targets: ["lexicon-generate"]),
+        .executable(name: "mind", targets: ["mind"]),
 		.plugin(name: "SwiftStandAloneGeneratorPlugin", targets: ["SwiftStandAloneGeneratorPlugin"]),
 		.plugin(name: "SwiftLibraryGeneratorPlugin", targets: ["SwiftLibraryGeneratorPlugin"]),
 	],
@@ -106,14 +107,23 @@ let package = Package(
 			],
 			resources: [.copy("Resources")]
 		),
-		.executableTarget(
-			name: "lexicon-generate",
-			dependencies: [
-				.target(name: "LexiconGenerators"),
-				.product(name: "ArgumentParser", package: "swift-argument-parser"),
-				.product(name: "Collections", package: "swift-collections")
-			]
-		),
+        .executableTarget(
+            name: "lexicon-generate",
+            dependencies: [
+                .target(name: "LexiconGenerators"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Collections", package: "swift-collections")
+            ]
+        ),
+        .executableTarget(
+            name: "mind",
+            dependencies: [
+                .target(name: "Lexicon"),
+                .target(name: "LexiconGenerators"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Collections", package: "swift-collections")
+            ]
+        ),
 		.plugin(
 			name: "SwiftStandAloneGeneratorPlugin",
 			capability: .buildTool(),
