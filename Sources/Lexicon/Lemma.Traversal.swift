@@ -6,6 +6,8 @@ import Collections
 
 public extension Lemma {
     
+    // TODO: test synonyms and performance
+    
     func traverse(_ traversal: Lexicon.Graph.Traversal, _ ƒ: (Lemma) -> ()) {
         
         let next: @LexiconActor () -> Lemma?
