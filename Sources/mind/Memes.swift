@@ -8,11 +8,11 @@ import Foundation
 import Lexicon
 import LexiconGenerators
 
-struct MindDictionary: AsyncParsableCommand {
+struct Memes: AsyncParsableCommand {
     
     static var configuration = CommandConfiguration(
-        commandName: "dictionary",
-        abstract: "Maintain json dictionaries of lemmas filtered by --type",
+        commandName: "memes",
+        abstract: "Maintain json dictionaries of memes filtered by --type",
         version: "1.0.0"
     )
 
@@ -54,7 +54,7 @@ struct MindDictionary: AsyncParsableCommand {
     ) -> [String: Any] {
         var result: [String: Any] = [:]
         
-        lexicon.root.graphTraversal(.depthFirst) { lemma in
+        lexicon.root.traverse(.depthFirst) { lemma in
             guard type.isSubset(of: Set(lemma.type.map(\.1.id))) else {
                 return
             }

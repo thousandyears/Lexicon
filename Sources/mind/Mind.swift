@@ -11,7 +11,7 @@ struct Mind: AsyncParsableCommand {
         commandName: "mind",
         abstract: "Mind your lexicon!",
         version: "1.0.0",
-        subcommands: [MindDictionary.self]
+        subcommands: [Memes.self]
     )
 }
 
