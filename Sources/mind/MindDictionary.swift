@@ -8,20 +8,22 @@ import Foundation
 import Lexicon
 import LexiconGenerators
 
-@main
-struct CodeGeneratorCommand: AsyncParsableCommand {
-
+struct MindDictionary: AsyncParsableCommand {
+    
     static var configuration = CommandConfiguration(
-        commandName: "mind",
-        abstract: "Mind your lexicon!",
+        commandName: "dictionary",
+        abstract: "Maintain json dictionaries of lemmas filtered by --type",
         version: "1.0.0"
     )
 
-    @Argument(help: "Type(s) to return.")
-    var type: [String] = []
-
     @Argument(help: "File path or URL to the lexicon")
-    var input: URL
+    var lexicon: URL
+    
+    @Option(name: .shortAndLong, help: "Type(s) to return")
+    var type: [String]
+    
+    @Flag(name: .shortAndLong)
+    var quiet: Bool = false
 
     @Option(
         name: .shortAndLong,
@@ -29,18 +31,15 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
     )
     var output: URL?
 
-    @Flag(name: .shortAndLong)
-    var quiet: Bool = false
-
     private var isLogging: Bool { !quiet }
 
     @LexiconActor
     mutating func run() async throws {
         if isLogging {
-            print("Reading \(input.lastPathComponent)...")
+            print("Reading \(lexicon.lastPathComponent)...")
         }
         let lexicon = try Lexicon.from(
-            TaskPaper(Data(contentsOf: input)).decode()
+            TaskPaper(Data(contentsOf: self.lexicon)).decode()
         )
         var result: [String: Any] = [:]
         let type = Set(type)
@@ -53,11 +52,9 @@ struct CodeGeneratorCommand: AsyncParsableCommand {
             result[id] = lemma.name
         }
         
-        let file = output?.appendingPathExtension("json") ?? input.deletingLastPathComponent()
+        let file = output ?? self.lexicon.deletingLastPathComponent()
                 .appendingPathComponent(lexicon.root.name)
                 .appendingPathExtension("json")
-        
-        
         
         if var loaded = try? JSONSerialization.jsonObject(with: Data(contentsOf: file)) as? [String: Any] {
             for id in Set(loaded.keys).subtracting(result.keys) {
@@ -82,22 +79,3 @@ extension Generators {
     }
 }
 
-extension URL: ExpressibleByArgument {
-
-    public init?(argument: String) {
-        if argument.hasPrefix("http") {
-            self.init(string: argument)
-        } else {
-            self.init(fileURLWithPath: argument)
-        }
-    }
-}
-
-extension Array: ExpressibleByArgument where Element: ExpressibleByArgument {
-
-    public init?(argument: String) {
-        self = argument.split(separator: ",").compactMap { substring in
-            Element(argument: String(substring))
-        }
-    }
-}
