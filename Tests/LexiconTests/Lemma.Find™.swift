@@ -2,6 +2,7 @@
 // github.com/screensailor 2022
 //
 
+#if canImport(NaturalLanguage)
 class Lemma_Find™: Hopes {
 	
 	let sentences = """
@@ -103,3 +104,4 @@ class Lemma_Find™: Hopes {
 		}
 	}
 }
+#endif

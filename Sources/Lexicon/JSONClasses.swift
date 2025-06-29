@@ -34,6 +34,8 @@ public enum JSONClasses: CodeGenerator {
 		
 		public static let shared = DateFormatter()
 		
+		#if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
+		// Use ISO8601DateFormatter on Apple platforms
 		public private(set) lazy var iso: ISO8601DateFormatter = {
 			self.dateStyle = .long
 			self.timeStyle = .short
@@ -50,5 +52,19 @@ public enum JSONClasses: CodeGenerator {
 		public override func string(from date: Date) -> String {
 			iso.string(from: date)
 		}
+		#else
+		// Use standard DateFormatter on Linux/non-Apple platforms
+		public override init() {
+			super.init()
+			// ISO 8601 format with fractional seconds
+			self.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+			self.locale = Locale(identifier: "en_US_POSIX")
+			self.timeZone = TimeZone(secondsFromGMT: 0)
+		}
+		
+		required init?(coder: NSCoder) {
+			super.init(coder: coder)
+		}
+		#endif
 	}
 }

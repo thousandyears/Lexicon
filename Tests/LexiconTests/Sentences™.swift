@@ -2,6 +2,7 @@
 // github.com/screensailor 2022
 //
 
+#if canImport(NaturalLanguage)
 class Sentences™: Hopes {
 	
 	func test() async throws {
@@ -79,3 +80,4 @@ class Sentences™: Hopes {
 			"""
 	}
 }
+#endif

@@ -2,6 +2,7 @@
 // github.com/screensailor 2022
 //
 
+#if canImport(NaturalLanguage)
 class Lemma_Traversal™: Hopes {
 	
 	let sentences = """
@@ -73,3 +74,4 @@ class Lemma_Traversal™: Hopes {
 		]
 	}
 }
+#endif
