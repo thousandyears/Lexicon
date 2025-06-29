@@ -2,12 +2,9 @@
 // github.com/screensailor 2022
 //
 
+import Foundation
 import Lexicon
-import UniformTypeIdentifiers
-
-public extension UTType {
-	static var typescript = UTType(filenameExtension: "ts", conformingTo: .sourceCode)!
-}
+// UTType is provided by UniformTypeIdentifiers+Compat.swift via Lexicon
 
 public enum Generator: CodeGenerator {
 	

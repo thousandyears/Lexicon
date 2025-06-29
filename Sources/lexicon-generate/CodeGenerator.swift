@@ -84,7 +84,7 @@ extension Generators {
 	}
 }
 
-extension URL: ExpressibleByArgument {
+extension URL: @retroactive ExpressibleByArgument {
 
 	public init?(argument: String) {
 		if argument.hasPrefix("http") {
@@ -95,7 +95,7 @@ extension URL: ExpressibleByArgument {
 	}
 }
 
-extension Array: ExpressibleByArgument where Element: ExpressibleByArgument {
+extension Array: @retroactive ExpressibleByArgument where Element: ExpressibleByArgument {
 
 	public init?(argument: String) {
 		self = argument.split(separator: ",").compactMap { substring in

@@ -348,7 +348,7 @@ extension Lemma {
 		}
 		else {
 			var o = ownType
-			o[id] = self
+			o[id] = Unowned(self)
 			for (_, lemma) in ownType {
 				o.merge(lemma.type){ o, _ in o }
 			}

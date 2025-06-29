@@ -2,12 +2,13 @@
 // github.com/screensailor 2022
 //
 
-import Combine
+import Foundation
+import Lexicon
 
 @MainActor public protocol EventContext:
 	Hashable,
 	Identifiable,
-	ObservableObject,
+	AnyObject,
 	CustomStringConvertible
 {
 	var events: Events { get }

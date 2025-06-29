@@ -1,5 +1,5 @@
 @_exported import Hope
-@_exported import Combine
+// Combine removed - using Swift concurrency instead
 @_exported import Lexicon
 @_exported import TypeScriptStandAlone
 

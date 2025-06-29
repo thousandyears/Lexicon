@@ -2,7 +2,9 @@
 // github.com/screensailor 2022
 //
 
-import Combine
+import Foundation
+
+#if canImport(SwiftUI)
 import SwiftUI
 
 public extension EnvironmentValues {
@@ -43,9 +45,10 @@ struct OnEvents: ViewModifier {
 		if types.isEmpty {
 			content
 		} else {
-			let events = events.filter{ event in types.contains(where: event.is) }
-			content.onReceive(events) { event in
-				ƒ(event)
+			content.task {
+				for await event in events.filter({ event in types.contains(where: event.is) }) {
+					await ƒ(event)
+				}
 			}
 		}
 	}
@@ -58,3 +61,5 @@ public extension View {
 		return self
 	}
 }
+
+#endif

@@ -2,14 +2,17 @@
 // github.com/screensailor 2022
 //
 
-import Combine
+import Foundation
 
-public typealias Bear = AnyCancellableSetBuilder
+// Swift Concurrency-based cancellation system
+public typealias AnyCancellable = Task<Void, Never>
+
+public typealias Bear = TaskSetBuilder
 public typealias Mind = Set<AnyCancellable>
 
-@resultBuilder public enum AnyCancellableSetBuilder {}
+@resultBuilder public enum TaskSetBuilder {}
 
-public extension AnyCancellableSetBuilder {
+public extension TaskSetBuilder {
 	
 	typealias Element = AnyCancellable
 	typealias Component = Set<Element>
@@ -41,5 +44,9 @@ public extension Set where Element == AnyCancellable {
 	
 	@inlinable mutating func `in`<A: Sequence>(_ mind: A) where A.Element == AnyCancellable {
 		formUnion(mind)
+	}
+	
+	func cancelAll() {
+		forEach { $0.cancel() }
 	}
 }

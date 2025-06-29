@@ -2,8 +2,9 @@
 // github.com/screensailor 2022
 //
 
+import Foundation
 import Lexicon
-import UniformTypeIdentifiers
+// UTType is provided by UniformTypeIdentifiers+Compat.swift via Lexicon
 
 public enum Generator: CodeGenerator {
 	
@@ -100,7 +101,7 @@ private extension Lexicon.Graph.Node.Class.JSON {
 		}
 		
 		lines += """
-		public final class \(L)_\(T): L, \(I)_\(T) {
+		public final class \(L)_\(T): L, \(I)_\(T), @unchecked Sendable {
 		\tpublic override class var localized: String { NSLocalizedString("\(id)", comment: "") }
 		}
 		"""
@@ -173,7 +174,7 @@ private extension Lexicon.Graph.Node.Class.JSON {
 			}
 		}
 		
-		let line = "public class \(L)_\(T): \(L)\(supertype.map{ "_\($0.idToClassSuffix)" } ?? "")\(mixin == nil ? ", \(I)_\(T)" : "")"
+		let line = "public class \(L)_\(T): \(L)\(supertype.map{ "_\($0.idToClassSuffix)" } ?? "")\(mixin == nil ? ", \(I)_\(T)" : ""), @unchecked Sendable"
 		
 		guard hasProperties else {
 			lines += line + " {}"

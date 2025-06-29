@@ -2,7 +2,8 @@
 // github.com/screensailor 2022
 //
 
-import UniformTypeIdentifiers
+import Foundation
+// UTType is provided by UniformTypeIdentifiers+Compat.swift
 
 public protocol CodeGenerator {
 	static var utType: UTType { get }

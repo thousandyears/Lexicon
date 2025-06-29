@@ -3,7 +3,7 @@
 //
 
 @_exported import Hope
-@_exported import Combine
+// Combine removed - using Swift concurrency instead
 @_exported import Lexicon
 @_exported import SwiftLexicon
 
@@ -83,8 +83,7 @@ final class SwiftLexicon™: Hopes {
 		try hope(x[test.one.more.time]) == "3"
 	}
 	
-	func test_Event_granularity() throws {
-		
+	func test_Event_granularity() throws {		
 		let events = Events()
 		
 		let promiseTicks = expectation()
@@ -117,7 +116,7 @@ final class SwiftLexicon™: Hopes {
 		test.one[2].more[2].time["❌"].one[2] >> events
 		test.one[3].more[3].time["✅"].one[3] >> events
 		
-		wait(for: 1) // TODO: flakey test
+		wait(for: [promiseTicks, promiseAll], timeout: 2)
 		oTicks.cancel()
 		oAll.cancel()
 	}

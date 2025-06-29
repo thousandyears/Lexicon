@@ -4,9 +4,9 @@
 
 import Foundation
 
-@LexiconActor public final class Lexicon: ObservableObject {
+@LexiconActor public final class Lexicon {
 	
-	@Published public private(set) var graph: Graph
+	public private(set) var graph: Graph
 	
 	public internal(set) var dictionary: [Lemma.ID: Lemma] = [:]
 	

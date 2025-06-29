@@ -4,10 +4,6 @@ import PackageDescription
 
 let package = Package(
 	name: "Lexicon",
-	platforms: [
-		.macOS(.v11),
-		.iOS(.v14)
-	],
 	products: [
 		.library(name: "Lexicon", targets: ["Lexicon"]),
 		.library(name: "SwiftLexicon", targets: ["SwiftLexicon"]),

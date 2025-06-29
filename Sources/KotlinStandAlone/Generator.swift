@@ -2,8 +2,9 @@
 // github.com/screensailor 2022
 //
 
+import Foundation
 import Lexicon
-import UniformTypeIdentifiers
+// UTType is provided by UniformTypeIdentifiers+Compat.swift via Lexicon
 
 public enum Generator: CodeGenerator {
 	

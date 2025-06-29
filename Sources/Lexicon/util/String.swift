@@ -6,7 +6,7 @@ import Foundation
 
 // TODO: sort, document & refactor!
 
-extension String: Error {} // TODO: dedicated error types
+extension String: @retroactive Error {} // TODO: dedicated error types
 
 extension String {
 	

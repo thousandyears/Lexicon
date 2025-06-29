@@ -2,6 +2,8 @@
 // github.com/screensailor 2022
 //
 
+import Lexicon
+
 public extension I where Self: L {
 	
 	subscript<Value>(value: Value) -> K<Self> where Value: Sendable, Value: Hashable {
@@ -51,12 +53,12 @@ public extension K {
 	
 	subscript(key: L) -> Any? { ____[key]?.base }
 	
-	@inlinable subscript<A>(as type: A.Type = A.self) -> A {
+	@inlinable subscript<T>(as type: T.Type = T.self) -> T {
 		get throws { try self[___] }
 	}
 	
-	@inlinable subscript<A>(key: L, as type: A.Type = A.self) -> A {
-		get throws { try (self[key] as? A).try() }
+	@inlinable subscript<T>(key: L, as type: T.Type = T.self) -> T {
+		get throws { try (self[key] as? T).try() }
 	}
 }
 

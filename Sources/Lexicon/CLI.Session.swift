@@ -20,7 +20,7 @@ public extension CLI {
 		// TODO: revisit with composable lexicons
 		public func event(cli: CLI, event: CustomDebugStringConvertible) async -> Event {
 			Event(
-				time: CFAbsoluteTimeGetCurrent() - startTime,
+				time: Date().timeIntervalSinceReferenceDate - startTime,
 				record: await cli.record(),
 				description: event.debugDescription
 			)
@@ -34,7 +34,7 @@ extension CLI.Session: RangeReplaceableCollection {
 	public var endIndex: Int { events.endIndex }
 	
 	public init() {
-		self.startTime = CFAbsoluteTimeGetCurrent()
+		self.startTime = Date().timeIntervalSinceReferenceDate
 		self.events = []
 	}
 	
